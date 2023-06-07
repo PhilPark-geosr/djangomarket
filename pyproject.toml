@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "djangomarket"
+version = "0.1.0"
+description = ""
+authors = ["PhilPark-geosr <parkpill26@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = ">=3.0.0,<3.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
