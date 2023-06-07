@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # thrid-party app
     'blog1',
     'instagram',
+    'market',
 ]
 
 MIDDLEWARE = [
