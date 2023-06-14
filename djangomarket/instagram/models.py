@@ -1,7 +1,11 @@
 from django.db import models
 
+# settings 불러 올때 이렇게 할것
+from django.conf import settings
+
 # Create your models here.
 class Post(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.TextField()
     # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
     # 디비에는 파일이 저장된 경로가 들어감
@@ -19,4 +23,15 @@ class Post(models.Model):
     #     return len(self.message)
     # message_length.short_description = "메세지 글자수" # 노출될 필드명
 
-    
+    # qs 정렬 조건
+    class Meta:
+        ordering = ['-id']
+
+class Comment(models.Model):
+    post = models.ForeignKey('instagram.Post', on_delete=models.CASCADE) # 실제 db에는 post_id 필드가 생성됨
+    message = models.TextField()
+    created_at= models.DateTimeField(auto_now_add =True)
+    updated_at = models.DateTimeField(auto_now =True)
+
+    class Meta:
+        ordering = ['-id']

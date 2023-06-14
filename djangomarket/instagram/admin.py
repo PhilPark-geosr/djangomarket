@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment
 from django.utils.safestring import mark_safe
 # Register your models here.
 
@@ -42,4 +42,28 @@ class Post(models.Model):
     # def message_length(self):
     #     return len(self.message)
     # message_length.short_description = "메세지 글자수" # 노출될 필드명
+'''
+
+@admin.register(Comment)
+class PostAdmin(admin.ModelAdmin):
+    # admin 페이지에서 표출할 필드 지정
+    # list_display에 들어갈수 있는 항목 : Post모델의 필드 이름 or 사용자 정의 함수들..
+    list_display =['id', 'post', 'message']
+    list_display_links =['message'] # 링크로 들어가고 싶은 곳에 지정
+    # 지정필드값으로 필터링 옵션 제공
+    list_filter =['post']
+    # 필터 쿼리를 날릴 수 있다
+    search_fields = ['message']
+
+    # 특별히 admin단에서만 보고싶은 필드 or 메소드 정의
+    
+'''
+class Comment(models.Model):
+    post = models.ForeignKey('instagram.Post', on_delete=models.CASCADE) # 실제 db에는 post_id 필드가 생성됨
+    message = models.TextField()
+    created_at= models.DateTimeField(auto_now_add =True)
+    updated_at = models.DateTimeField(auto_now =True)
+
+    class Meta:
+        ordering = ['-id']
 '''

@@ -37,14 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # thrid-party app
+    
+    # third apps
+    'django_extensions',
+    'debug_toolbar',
+    
+    # local apps
     'blog1',
     'instagram',
     'market',
 ]
 
 MIDDLEWARE = [
+    # debug toolbar 관련
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -129,3 +136,12 @@ STATIC_URL = '/static/'
 # media file다룰때
 MEDIA_URL = '/media/' #URL로 파일에 대해 접근할 때
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #파일을 저장하는 경로
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1", #debug toolbar에 접근할 수 있는 url
+    # ...
+]
+
+
+AUTH_USER_MODEL = "auth.User"

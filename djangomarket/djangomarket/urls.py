@@ -38,4 +38,7 @@ urlpatterns = [
 if settings.DEBUG: #디버그 옵션 참일때만 수행, 즉 디버깅 모드에서만 접근 가능
     # MEDIA_URL로 이미지 접근 가능하게 함!
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    urlpatterns += [
+        path("__debug__/", include("debug_toolbar.urls")),
+    ]
 
