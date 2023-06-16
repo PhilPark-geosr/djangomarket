@@ -31,6 +31,7 @@ urlpatterns = [
     path('blog1/', include('blog1.urls')), 
     path('instagram/', include('instagram.urls')), 
     path('market/', include('market.urls')), 
+    path('accounts/', include('accounts.urls')),
 
 ]
 

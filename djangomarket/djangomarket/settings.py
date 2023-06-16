@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'blog1',
     'instagram',
     'market',
+    'accounts', # 계정관련 
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,7 @@ INTERNAL_IPS = [
 
 
 AUTH_USER_MODEL = "auth.User"
+
+
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'

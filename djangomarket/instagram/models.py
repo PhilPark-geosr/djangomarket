@@ -1,12 +1,33 @@
 from django.db import models
 
-# settings 불러 올때 이렇게 할것
+# settings 불러 올때 이렇게 할것 이래야 우리가 정의한 settings를 오버라이드 함
 from django.conf import settings
 
+#TODO: 다시 볼것
+from django.urls import reverse
+
+# validator
+from django.core.validators import MinLengthValidator
+
+
 # Create your models here.
+# for AI
+class AI(models.Model):
+    # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
+    # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # 디비에는 파일이 저장된 경로가 들어감
+    photo = models.ImageField(blank= True, upload_to='instagram/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
+    created_at= models.DateTimeField(auto_now_add =True)
+    updated_at = models.DateTimeField(auto_now =True)
+    result_url = models.TextField()
+    
+
+    # qs 정렬 조건
+    class Meta:
+        ordering = ['-id']
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    message = models.TextField()
+    message = models.TextField(validators=[MinLengthValidator(10)]) #최소 10글자 유효성 검사 로직
     # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
     # 디비에는 파일이 저장된 경로가 들어감
     photo = models.ImageField(blank= True, upload_to='instagram/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
@@ -22,13 +43,18 @@ class Post(models.Model):
     # def message_length(self):
     #     return len(self.message)
     # message_length.short_description = "메세지 글자수" # 노출될 필드명
-
+    def get_absolute_url(self):
+        return reverse("instagram:post_detail", args= [self.pk])
+    
     # qs 정렬 조건
     class Meta:
         ordering = ['-id']
 
 class Comment(models.Model):
-    post = models.ForeignKey('instagram.Post', on_delete=models.CASCADE) # 실제 db에는 post_id 필드가 생성됨
+    post = models.ForeignKey('instagram.Post', on_delete=models.CASCADE,
+                             # 댓글을 쓸 수 있는 posting 항목 제한
+                             # Post 모델의 is_public 이 True인 것만 댓글을 달 수 있도록 하겠다!
+                             limit_choices_to={'is_pulic' : True}) # 실제 db에는 post_id 필드가 생성됨
     message = models.TextField()
     created_at= models.DateTimeField(auto_now_add =True)
     updated_at = models.DateTimeField(auto_now =True)
