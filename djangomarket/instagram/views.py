@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Post, AI
 from .forms import PostForm, AIForm
-
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 import requests
 # import requests
@@ -21,11 +21,19 @@ def ai_new(request):
         result_url = models.TextField()
         '''
          #외부 url 요청 처리하는 로직
+        # user모델 받아온다
         
         form = AIForm(request.POST, request.FILES)
+
+        
         # print(form)
         # # print(request.data)
         if form.is_valid(): #유효성 검사 로직 수행
+
+            User = get_user_model()
+            current_user = User.objects.filter(pk=request.POST['user'])
+            # print('user', current_user)
+
             files = request.FILES['photo']
             upload = {'image': files}
 
@@ -34,13 +42,14 @@ def ai_new(request):
             res = requests.post(url, files = upload)
             # print(res.json())
             # 모델 인스턴스 생성
-            temp = AI(photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
+            # print(request.POST)
+            temp = AI(user = current_user.first() , photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
             # print(temp)
             # 모델결과 저장
             temp.save()
             
             # TODO: 요청결과 테이블로 볼 수 있도록 생성
-            return redirect('/instagram/')
+            return redirect('/instagram/ai/inference/')
         
     else: #request.method == "GET"일경우 
         # 빈 폼 반환
@@ -79,7 +88,7 @@ def post_new(request):
             # TODO: abolute url구현
             # return redirect(post)
             
-            return redirect('/instagram/')
+            return redirect('/instagram/ai/inference/')
         
     else: #request.method == "GET"일경우 
         # 빈 폼 반환
@@ -108,5 +117,22 @@ def post_list(request):
     # instagram/templates/instagram/post_list.html
     return render(request, 'instagram/post_list.html', {
         'post_list' : qs,
+        'q' : q,
+    })
+
+def ai_list(request):
+    # print(request.GET)
+    q = request.GET.get('q', '')
+    if q:
+        User = get_user_model()
+        current_user = User.objects.filter(username=q).first()
+        qs = current_user.ai_set.all()
+        print(qs)
+    # instagram/templates/instagram/post_list.html
+    else:
+        qs = AI.objects.all()
+        
+    return render(request, 'instagram/ai_list.html', {
+        'ai_list' : qs,
         'q' : q,
     })

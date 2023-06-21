@@ -19,5 +19,5 @@ class PostForm(forms.ModelForm):
 class AIForm(forms.ModelForm):
     class Meta:
         model = AI
-        fields = ['photo']
+        fields = ['user','photo']
         
