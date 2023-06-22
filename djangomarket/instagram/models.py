@@ -17,6 +17,7 @@ class AI(models.Model):
     # 누가 추론했는지
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 디비에는 파일이 저장된 경로가 들어감
+    # TODO: 사진 저장 경로바꿀것
     photo = models.ImageField(blank= True, upload_to='instagram/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
     created_at= models.DateTimeField(auto_now_add =True)
     updated_at = models.DateTimeField(auto_now =True)
@@ -29,6 +30,11 @@ class AI(models.Model):
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.TextField(validators=[MinLengthValidator(10)]) #최소 10글자 유효성 검사 로직
+    
+    # tag set
+    # many to many 에서는 blank = True로 두는게 편함
+    # 이유 : 포스팅에 태그를 작성 안할수도 있으므로..!
+    tag_set= models.ManyToManyField('Tag', blank = True)
     # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
     # 디비에는 파일이 저장된 경로가 들어감
     photo = models.ImageField(blank= True, upload_to='instagram/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
@@ -62,3 +68,12 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-id']
+
+#
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    # post_set = 
+
+     # admin의 제목 바꾸고 싶을때
+    def __str__(self):
+        return self.name
