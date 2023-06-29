@@ -42,12 +42,14 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     "bootstrap4", # UI 관련 라이브러리
+    "rest_framework", # DRF
     
     # local apps
     'blog1',
     'instagram',
     'market',
     'accounts', # 계정관련 
+    'ai', # for ai inference api
 ]
 
 MIDDLEWARE = [
