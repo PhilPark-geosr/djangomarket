@@ -25,8 +25,20 @@ from . import settings
 from django.conf import settings
 
 from django.conf.urls.static import static
+# View관련
+# CBV
+from django.views.generic import TemplateView, RedirectView
+
+class RootView(TemplateView):
+    template_name = 'root.html'
 
 urlpatterns = [
+    # path('', RootView.as_view(template_name = "root.html"), name ='root'),
+    # 리다이렉트 url = 원하는 이동경로
+    path('', RedirectView.as_view(
+        # url = '/instagram/'
+        pattern_name = "instagram:post_list", #URL Reverse        
+        ), name = 'root'), 
     path('admin/', admin.site.urls),
     path('blog1/', include('blog1.urls')), 
     path('instagram/', include('instagram.urls')), 

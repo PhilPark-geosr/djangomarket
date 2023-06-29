@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # third apps
     'django_extensions',
     'debug_toolbar',
+    "bootstrap4", # UI 관련 라이브러리
     
     # local apps
     'blog1',
@@ -67,7 +68,11 @@ ROOT_URLCONF = 'djangomarket.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # 특정 앱에 속하지 않은 경우,  파일 시스템에서 찾아서 응답해주는 템플릿 경로 지정
+            os.path.join(BASE_DIR, 'djangomarket', 'templates')
+
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

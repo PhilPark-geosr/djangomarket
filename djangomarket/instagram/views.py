@@ -1,9 +1,19 @@
-from django.shortcuts import render
+# Http Request, Response 관련
+from django.http	import HttpRequest,	HttpResponse, Http404
+
+# Models
 from .models import Post, AI
-from .forms import PostForm, AIForm
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect
+# Forms
+from .forms import PostForm, AIForm
+
+# render
+from django.shortcuts import render, redirect, get_object_or_404
+# 다른 웹서버에 자료 요청용
 import requests
+
+# CBV
+from django.views.generic import ListView, DetailView
 # import requests
 
 
@@ -50,6 +60,8 @@ def ai_new(request):
             
             # TODO: 요청결과 테이블로 볼 수 있도록 생성
             return redirect('/instagram/ai/inference/')
+        
+            # return redirect('')
         
     else: #request.method == "GET"일경우 
         # 빈 폼 반환
@@ -108,17 +120,81 @@ form 내용 : 테이블 html 태그이므로, <table></table>로 감싸야 한�
 <tr><th><label for="id_is_public">공개여부:</label></th><td><input type="checkbox" name="is_public" id="id_is_public"></td></tr>
 '''
 
-def post_list(request):
-    qs = Post.objects.all()
-    print(request.GET)
-    q = request.GET.get('q', '')
-    if q:
-        qs = qs.filter(message__icontains = q)
-    # instagram/templates/instagram/post_list.html
-    return render(request, 'instagram/post_list.html', {
-        'post_list' : qs,
-        'q' : q,
-    })
+
+# CBV
+post_list = ListView.as_view(model = Post, paginate_by =10)
+
+# FBV
+# def post_list(request):
+#     qs = Post.objects.all()
+#     print(request.GET)
+#     q = request.GET.get('q', '')
+#     if q:
+#         qs = qs.filter(message__icontains = q)
+#     # instagram/templates/instagram/post_list.html
+#     return render(request, 'instagram/post_list.html', {
+#         'post_list' : qs,
+#         'q' : q,
+#     })
+
+# def post_detail(request, pk):
+#     response = HttpResponse()
+#     response.write("Hello World!")
+#     return response
+
+
+# CBV
+
+'''
+기본버전
+DetailView에는 따로 안넘겨도 query string이 catpure되어 넘겨진다
+
+path('<int:pk>/', views.post_detail),
+여기서 pk가 인자로 알아서 넘어가서 queryset을 형성한다
+
+'''
+# 기본버전
+'''
+post_detail = DetailView.as_view(model = Post)
+
+'''
+
+# is_public = True인것만 볼 수 있게
+'''
+post_detail = DetailView.as_view(
+    model = Post,
+    queryset= Post.objects.filter(is_public =True)
+)
+'''
+
+class PostDetailView(DetailView):
+    model = Post
+    # queryset = Post.objects.filter(is_pubic = True)
+    
+    # DetailView를 상속받아 재정의
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:  # 현재 로그인 한 유저의 인스턴스
+            qs = qs.filter(is_public = True) # 로그인 안한 유저들은 is_public = True만 볼 수 있도록
+        return qs
+post_detail = PostDetailView.as_view()
+
+# FBV
+# def post_detail(request, pk): # 두번째 인자 이름은 urls.py의 path('<int:pk>/', views.post_detail), 의 capture 된 문자열과 정확하게 일치해야 한다!
+#     # try:
+#     #     post = Post.objects.get(pk = pk)
+#     # except:
+#     #     raise Http404
+
+#     # 위와 같은 로직
+#     post = get_object_or_404(Post, pk = pk)
+
+#     return render(request, 'instagram/post_detail.html', {
+#         'post' : post,
+#     })
+
+
+    
 
 def ai_list(request):
     # print(request.GET)
