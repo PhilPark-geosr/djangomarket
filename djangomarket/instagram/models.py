@@ -18,11 +18,14 @@ class AI(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 디비에는 파일이 저장된 경로가 들어감
     # TODO: 사진 저장 경로바꿀것
-    photo = models.ImageField(blank= True, upload_to='instagram/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
+    photo = models.ImageField(blank= True, upload_to='ai/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
     created_at= models.DateTimeField(auto_now_add =True)
     updated_at = models.DateTimeField(auto_now =True)
     result_url = models.TextField()
     
+    # URL reverse
+    def get_absolute_url(self):
+        return reverse("instagram:ai_list")
 
     # qs 정렬 조건
     class Meta:
@@ -50,6 +53,8 @@ class Post(models.Model):
     # def message_length(self):
     #     return len(self.message)
     # message_length.short_description = "메세지 글자수" # 노출될 필드명
+
+    ''' URL Reverse 구현 꼭 모델에 구현해 놓아야 함!!'''
     def get_absolute_url(self):
         return reverse("instagram:post_detail", args= [self.pk])
     

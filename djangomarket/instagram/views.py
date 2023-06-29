@@ -65,9 +65,10 @@ def ai_new(request):
             temp.save()
             
             # TODO: 요청결과 테이블로 볼 수 있도록 생성
-            return redirect('/instagram/ai/inference/')
-        
-            # return redirect('')
+            # return redirect('/instagram/ai/inference/')
+
+            # url reverse
+            return redirect(temp)
         
     else: #request.method == "GET"일경우 
         # 빈 폼 반환

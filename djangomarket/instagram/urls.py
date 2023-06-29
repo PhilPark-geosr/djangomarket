@@ -9,5 +9,7 @@ urlpatterns = [
     path('ai/inference/', views.ai_list, name = "ai_list"),
     path('new/', views.post_new, name = "post_new"),
     path('', views.post_list),
-    path('<int:pk>/', views.post_detail),
+
+    # name인자에 url리버스를 수행할 이름을 넘겨주면된다!
+    path('<int:pk>/', views.post_detail, name = "post_detail"),
 ]
