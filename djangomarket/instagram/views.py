@@ -16,6 +16,12 @@ import requests
 from django.views.generic import ListView, DetailView
 # import requests
 
+# decorator
+from django.contrib.auth.decorators	import login_required
+# CBV에 입힐 데코레이터
+from django.utils.decorators	import method_decorator
+# 로그인 인증 관련
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 def ai_new(request):
@@ -122,9 +128,31 @@ form 내용 : 테이블 html 태그이므로, <table></table>로 감싸야 한�
 
 
 # CBV
-post_list = ListView.as_view(model = Post, paginate_by =10)
+# 기본
+# post_list = ListView.as_view(model = Post, paginate_by =10)
+'''
+method decorator
+첫번째 인자 : decorator 종류 : 어떤 데코레이터로 입히고 싶은지
+name : 어떤 멤버함수에 첫번째 인자로 지정한 decorator를 입히고 싶은지
+'''
+
+# 방법 1
+# @method_decorator(login_required, name = 'dispatch')
+# class PostListView(ListView):
+#     model= Post
+#     paginate_by = 10
+
+# 방법 2
+
+class PostListView(LoginRequiredMixin, ListView):
+    model= Post
+    paginate_by = 10
+
+post_list = PostListView.as_view()
+
 
 # FBV
+# @login_required
 # def post_list(request):
 #     qs = Post.objects.all()
 #     print(request.GET)
