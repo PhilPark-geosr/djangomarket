@@ -15,6 +15,7 @@ class Post(models.Model):
     message = models.TextField() #최소 10글자 유효성 검사 로직
     created_at= models.DateTimeField(auto_now_add =True)
     updated_at = models.DateTimeField(auto_now =True)
+    is_public = models.BooleanField(default = False, db_index=True)
 
     # admin의 제목 바꾸고 싶을때
     def __str__(self):
