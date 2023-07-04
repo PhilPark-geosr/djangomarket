@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'market',
     'accounts', # 계정관련 
     'ai', # for ai inference api
+    'drf', # DRF
 ]
 
 MIDDLEWARE = [
@@ -151,9 +152,15 @@ INTERNAL_IPS = [
     # ...
 ]
 
-
+# 유저 모델 임포트 꼭 앱시작시 먼저 정의해주고 시작해야 함!
 AUTH_USER_MODEL = "auth.User"
 
 
+# erd 추출용
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
+# django-shell_plus 사용할때의 설정
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'

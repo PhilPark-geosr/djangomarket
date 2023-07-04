@@ -15,7 +15,11 @@ from django.core.validators import MinLengthValidator
 class AI(models.Model):
     # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
     # 누가 추론했는지
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ai_inference_set")
+
+    '''
+    related name : {appname}_{modelname}_set
+    ''' 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ai_ai_set")
     # 디비에는 파일이 저장된 경로가 들어감
     # TODO: 사진 저장 경로바꿀것
     photo = models.ImageField(blank= True, upload_to='ai/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!

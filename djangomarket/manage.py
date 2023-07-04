@@ -3,6 +3,7 @@
 import os
 import sys
 
+os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangomarket.settings')

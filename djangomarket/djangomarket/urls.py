@@ -40,11 +40,18 @@ urlpatterns = [
         pattern_name = "instagram:post_list", #URL Reverse        
         ), name = 'root'), 
     path('admin/', admin.site.urls),
+
+    # DRF
+    path('api-auth/', include('rest_framework.urls')),
+
+    # my app
     path('blog1/', include('blog1.urls')), 
     path('instagram/', include('instagram.urls')), 
     path('market/', include('market.urls')), 
     path('accounts/', include('accounts.urls')),
-    path('ai/', include('ai.urls')),
+    path('ai/', include('ai.urls')), # for ai inference
+    path('api/', include('drf.urls')), # drf
+    
 
 ]
 
