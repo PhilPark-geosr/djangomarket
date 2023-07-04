@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     "bootstrap4", # UI 관련 라이브러리
     "rest_framework", # DRF
+    'drf_yasg', # DRF swagger
     
     # local apps
     'blog1',

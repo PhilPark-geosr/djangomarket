@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import url
 
+# DRF and Swagger 관련
+from rest_framework.permissions import AllowAny
+from drf_yasg.views import get_schema_view 
+from drf_yasg import openapi
 
 """
 from django.conf import global_settings
@@ -32,6 +37,26 @@ from django.views.generic import TemplateView, RedirectView
 class RootView(TemplateView):
     template_name = 'root.html'
 
+
+# Swagger로 보고 싶은 urls 추가
+schema_url_patterns = [ 
+    path('', include('drf.urls')),
+    ]
+
+schema_view_v1 = get_schema_view(
+    openapi.Info(
+        title="Open API",
+        default_version='v1',
+        description="시스템 API",
+        terms_of_service="https://www.google.com/policies/terms/",
+    ),
+    public=True,
+    permission_classes=(AllowAny,),
+    patterns=schema_url_patterns,
+)
+
+
+# URL pattern 추가
 urlpatterns = [
     # path('', RootView.as_view(template_name = "root.html"), name ='root'),
     # 리다이렉트 url = 원하는 이동경로
@@ -50,9 +75,14 @@ urlpatterns = [
     path('market/', include('market.urls')), 
     path('accounts/', include('accounts.urls')),
     path('ai/', include('ai.urls')), # for ai inference
+    
+    # DRF
     path('api/', include('drf.urls')), # drf
     
-
+    # swagger
+    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view_v1.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view_v1.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^redoc/$', schema_view_v1.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
 
