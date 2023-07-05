@@ -134,10 +134,10 @@ DATABASES = {
 #     'default': {
 #         'ENGINE': 'djongo',
 #         'CLINET' : {
-#             "name" : "django",
-#             "host" : "mongodb+srv://ppark:all48088!!@nestcluster.svbttzm.mongodb.net/?retryWrites=true&w=majority",
-#             "username" : "ppark",
-#             "password" : "all48088!!",
+#             "name" : "",
+#             "host" : "",
+#             "username" : "",
+#             "password" : "",
 #             # "authMechanism" : "SCRAM-SHA-1",
 #         }
         
