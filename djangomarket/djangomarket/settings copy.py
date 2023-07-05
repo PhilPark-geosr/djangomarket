@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'accounts', # 계정관련 
     'ai', # for ai inference api
     'drf', # DRF
-    # 'mongo', # for mongdb
+    'mongo', # for mongdb
 ]
 
 MIDDLEWARE = [
@@ -127,7 +127,7 @@ DATABASES = {
             "host" : "mongodb+srv://ppark:all48088!!@nestcluster.svbttzm.mongodb.net/?retryWrites=true&w=majority",
             "username" : "ppark",
             "password" : "all48088!!",
-            # "authMechanism" : "SCRAM-SHA-1",
+            "authMechanism" : "SCRAM-SHA-1",
         }
         
     }
