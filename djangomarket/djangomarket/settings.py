@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "bootstrap4", # UI 관련 라이브러리
     "rest_framework", # DRF
     'drf_yasg', # DRF swagger
+    'corsheaders', #cors
     
     # local apps
     'blog1',
@@ -52,11 +53,14 @@ INSTALLED_APPS = [
     'accounts', # 계정관련 
     'ai', # for ai inference api
     'drf', # DRF
+    'mongo', # for mongdb
 ]
 
 MIDDLEWARE = [
     # debug toolbar 관련
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # CORS
+    'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -65,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    
 ]
 
 ROOT_URLCONF = 'djangomarket.urls'
@@ -95,13 +101,37 @@ WSGI_APPLICATION = 'djangomarket.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+# for mongo db
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+        
+#         'NAME': 'bezkoder_db',
+#         'HOST': '127.0.0.1',
+#         'PORT': 27017,
+#     }
+# }
+# for mongo Atlas
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'CLINET' : {
+            "name" : "django",
+            "host" : "mongodb+srv://ppark:all48088!!@nestcluster.svbttzm.mongodb.net/?retryWrites=true&w=majority",
+            "username" : "ppark",
+            "password" : "all48088!!",
+            "authMechanism" : "SCRAM-SHA-1",
+        }
+        
     }
 }
-
 
 
 # Password validation
@@ -162,6 +192,14 @@ GRAPH_MODELS = {
   'all_applications': True,
   'group_models': True,
 }
+
+# for CORS
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8081',
+# )
 
 # django-shell_plus 사용할때의 설정
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
