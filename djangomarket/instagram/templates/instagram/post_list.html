@@ -16,6 +16,9 @@
                     pk
                 </td>
                 <td>
+                    user
+                </td>
+                <td>
                     photo
                 </td>
                 <td>
@@ -33,6 +36,9 @@
             <tr>
                 <td>
                     {{post.pk}}
+                </td>
+                <td>
+                    {{post.author.username}}
                 </td>
                 <td>
                     {% if post.photo %}
