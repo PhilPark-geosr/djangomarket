@@ -40,7 +40,7 @@ class RootView(TemplateView):
 
 # Swagger로 보고 싶은 urls 추가
 schema_url_patterns = [ 
-    path('', include('drf.urls')),
+    path('api/', include('drf.urls')),
     ]
 
 schema_view_v1 = get_schema_view(
