@@ -118,20 +118,31 @@ WSGI_APPLICATION = 'djangomarket.wsgi.application'
 #         'PORT': 27017,
 #     }
 # }
-# for mongo Atlas
+
+
+# for mongo local
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'CLINET' : {
-            "name" : "django",
-            "host" : "mongodb+srv://ppark:all48088!!@nestcluster.svbttzm.mongodb.net/?retryWrites=true&w=majority",
-            "username" : "ppark",
-            "password" : "all48088!!",
-            # "authMechanism" : "SCRAM-SHA-1",
-        }
-        
+        'NAME': 'django_test2',
+        'HOST': '127.0.0.1',
+        'PORT': 27017,
     }
 }
+# for mongo Atlas
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'CLINET' : {
+#             "name" : "django",
+#             "host" : "mongodb+srv://ppark:all48088!!@nestcluster.svbttzm.mongodb.net/?retryWrites=true&w=majority",
+#             "username" : "ppark",
+#             "password" : "all48088!!",
+#             # "authMechanism" : "SCRAM-SHA-1",
+#         }
+        
+#     }
+# }
 
 
 # Password validation

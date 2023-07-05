@@ -94,12 +94,12 @@ def post_new(request):
         # print(form)
         # print(request.data)
         if form.is_valid(): #유효성 검사 로직 수행
-            files = request.FILES['image']
-            upload = {'image': files}
+            # files = request.FILES['photo']
+            # upload = {'image': files}
 
             # res = requests.post(' http://127.0.0.1:5000/image/', files = upload)
-            url = 'http://192.168.1.141:8000/inference/'
-            res = requests.post(url, files = upload)
+            # url = 'http://192.168.1.141:8000/inference/'
+            # res = requests.post(url, files = upload)
             # print(res.text)
             # DB에 저장
             post = form.save()
@@ -107,7 +107,7 @@ def post_new(request):
             # TODO: abolute url구현
             # return redirect(post)
             
-            return redirect('/instagram/ai/inference/')
+            return redirect('/instagram/')
         
     else: #request.method == "GET"일경우 
         # 빈 폼 반환

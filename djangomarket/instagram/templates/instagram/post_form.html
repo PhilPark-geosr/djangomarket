@@ -1,5 +1,5 @@
-<form action "http://192.168.1.141:8000/inference/" method = "post" enctype = "multipart/form-data">
-    {% comment %} <form action "" method = "post" enctype = "multipart/form-data"> {% endcomment %}
+{% comment %} <form action "http://192.168.1.141:8000/inference/" method = "post" enctype = "multipart/form-data"> {% endcomment %}
+<form action "" method = "post" enctype = "multipart/form-data">
     {% csrf_token %}
     <table>
         {{form}}

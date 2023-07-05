@@ -24,6 +24,9 @@
                 <td>
                     created_at
                 </td>
+                <td>
+                    tag
+                </td>
             </tr>
         {% for post in post_list %}
             
@@ -48,6 +51,12 @@
                 </td>
                 <td>
                 {{post.created_at}}
+                </td>
+                <td>
+                    {% comment %} represent many to many field {% endcomment %}
+                    {% for tag in post.tag_set.all%}
+                        {{tag}}
+                    {% endfor %}
                 </td>
                 
             </tr>
