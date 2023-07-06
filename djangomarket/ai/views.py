@@ -2,11 +2,11 @@
 from django.http	import HttpRequest,	HttpResponse, Http404
 
 # Models
-from .models import  AI
+from .models import  AI, AIDetail
 from django.contrib.auth import get_user_model
 
 # Forms
-from .forms import AIForm
+from .forms import AIForm, AIDetailForm
 
 # render
 from django.shortcuts import render, redirect, get_object_or_404
@@ -81,6 +81,61 @@ def ai_new(request):
     # print(form)
     
     return render(request, 'ai/ai_form.html', {
+        'form' : form,
+    })
+
+def aidetail_new(request):
+    if request.method =="POST":
+         #외부 url 요청 처리하는 로직
+        form = AIDetailForm(request.POST, request.FILES)
+
+        # print(form)
+        # # print(request.data)
+        if form.is_valid(): #유효성 검사 로직 수행
+            # user모델 받아온다
+            User = get_user_model()
+            current_user = User.objects.filter(pk=request.POST['user'])
+            # print('user', current_user)
+
+            files = request.FILES['photo']
+            upload = {'image': files}
+
+            # res = requests.post(' http://127.0.0.1:5000/image/', files = upload)
+            url = 'http://192.168.1.141:8000/inference/'
+            res = requests.post(url, files = upload) # 요청한 결과 res에 받음
+            # print(res.json())
+            # 모델 인스턴스 생성
+            # print(request.POST)
+            # temp = AI(user = current_user.first() , photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
+            
+            # form save
+            form = form.save(commit=False) #commit False로 꼭 지정해야 한다
+
+            # add data
+            form.result = res.json()
+            form.save()
+
+
+            # temp = AIDetail(user = current_user.first() , photo = request.FILES['photo'],  result = res.json())
+            # print(temp)
+            # 모델결과 저장
+            # temp.save()
+
+            # print("form type", type(form))
+            
+            
+            # TODO: 요청결과 테이블로 볼 수 있도록 생성
+            # return redirect('/instagram/ai/inference/')
+
+            # url reverse
+            # return redirect(temp)
+            return redirect('/')
+    else: #request.method == "GET"일경우 
+        # 빈 폼 반환
+        form = AIDetailForm()
+    # print(form)
+    
+    return render(request, 'ai/aidetail_form.html', {
         'form' : form,
     })
 

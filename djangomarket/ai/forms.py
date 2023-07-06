@@ -1,5 +1,5 @@
 from django import forms
-from .models import AI
+from .models import AI, AIDetail
 
 # model명과 form 명을
 # naming rule : {model명} + Form
@@ -16,3 +16,8 @@ class AIForm(forms.ModelForm):
         model = AI
         fields = ['user','photo']
         
+
+class AIDetailForm(forms.ModelForm):
+    class Meta:
+        model = AIDetail
+        fields = ['user','photo', 'task_category', 'model_name']
