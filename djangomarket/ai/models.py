@@ -25,8 +25,8 @@ class AI(models.Model):
     photo = models.ImageField(blank= True, upload_to='ai/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
     created_at= models.DateTimeField(auto_now_add =True)
     updated_at = models.DateTimeField(auto_now =True)
-    result_url = models.TextField()
-    
+    # result_url = models.TextField()
+    result = models.JSONField()
     # URL reverse
     def get_absolute_url(self):
         return reverse("ai:ai_list")

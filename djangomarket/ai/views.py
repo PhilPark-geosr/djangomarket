@@ -58,11 +58,13 @@ def ai_new(request):
 
             # res = requests.post(' http://127.0.0.1:5000/image/', files = upload)
             url = 'http://192.168.1.141:8000/inference/'
-            res = requests.post(url, files = upload)
+            res = requests.post(url, files = upload) # 요청한 결과 res에 받음
             # print(res.json())
             # 모델 인스턴스 생성
             # print(request.POST)
-            temp = AI(user = current_user.first() , photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
+            # temp = AI(user = current_user.first() , photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
+            
+            temp = AI(user = current_user.first() , photo = request.FILES['photo'], result = res.json())
             # print(temp)
             # 모델결과 저장
             temp.save()
