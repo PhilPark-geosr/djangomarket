@@ -109,7 +109,7 @@ def aidetail_new(request):
             # temp = AI(user = current_user.first() , photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
             
             # form save
-            form = form.save(commit=False) #commit False로 꼭 지정해야 한다
+            form = form.save(commit=False) #commit False로 해야 추가적인 정보를 저장할 수 있음
 
             # add data
             form.result = res.json()
@@ -151,7 +151,7 @@ def ai_list(request):
         # current_user = User.objects.filter(username=q).first()
         
         # 유저에 해당되는 모든 ai 결과들 쿼리
-        qs = current_user.ai_inference_set.all()
+        qs = current_user.ai_ai_set.all()
         print(qs)
     # instagram/templates/instagram/post_list.html
     else:
@@ -160,5 +160,28 @@ def ai_list(request):
         
     return render(request, 'ai/ai_list.html', {
         'ai_list' : qs,
+        'q' : q,
+    })
+
+def aidetail_list(request):
+    # print(request.GET)
+    q = request.GET.get('q', '')
+    if q:
+        User = get_user_model()
+
+        # 쿼리스트링으로 넘어온 유저로 검색
+        current_user = get_object_or_404(User, username=q)
+        # current_user = User.objects.filter(username=q).first()
+        
+        # 유저에 해당되는 모든 ai 결과들 쿼리
+        qs = current_user.ai_aidetail_set.all()
+        print(qs)
+    # instagram/templates/instagram/post_list.html
+    else:
+        # 쿼리스트링으로 아무것도 안들어올 시 그냥 모두 검색
+        qs = AIDetail.objects.all()
+        
+    return render(request, 'ai/aidetail_list.html', {
+        'aidetail_list' : qs,
         'q' : q,
     })

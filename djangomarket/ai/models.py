@@ -73,7 +73,12 @@ class Task(models.Model):
     def __str__(self):
         # return f"Custom Post object create_at {self.created_at}"
         return self.name
+    
+    
 class InferenceModel(models.Model):
+    
+    #TODO: 테이블 설계 바꾸기
+    # task = models.ForeignKey('ai.Task', on_delete=models.CASCADE)
 
     # 모델 명
     name = models.TextField()
