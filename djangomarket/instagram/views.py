@@ -23,6 +23,9 @@ from django.utils.decorators	import method_decorator
 # 로그인 인증 관련
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+# message framework : 사용자에게 메세지 보여줄때 슴
+from django.contrib import messages
+
 # Create your views here.
 def ai_new(request):
 
@@ -79,40 +82,37 @@ def ai_new(request):
         'form' : form,
     })
 
+@login_required
 def post_new(request):
 
     if request.method =="POST":
-         #외부 url 요청 처리하는 로직
-        # print(request.FILES['image'].name, type(request.FILES['image'].name))
-        
-        # print('요청전',request.FILES)
-        
-        # print('request 목록',request.url)
-        # print('요청후',request.FILES)
-        
         form = PostForm(request.POST, request.FILES)
-        # print(form)
-        # print(request.data)
+        
         if form.is_valid(): #유효성 검사 로직 수행
-            # files = request.FILES['photo']
-            # upload = {'image': files}
 
-            # res = requests.post(' http://127.0.0.1:5000/image/', files = upload)
-            # url = 'http://192.168.1.141:8000/inference/'
-            # res = requests.post(url, files = upload)
-            # print(res.text)
-            # DB에 저장
-            post = form.save()
-            # redirect 
-            # TODO: abolute url구현
-            # return redirect(post)
+            # 1. 데이터 접근
+            '''
+            request.POST['message'로 접근하면 안됨] --> 유효성 검사 통과한 데이터들만 받아야 하므로
+            따라서, form.cleaned_data 로 꼭 접근해야 함!
+            '''
             
-            return redirect('/instagram/')
+            # message = form.cleaned_data['message']
+            # print('message', message)
+            
+            # 2. 데이터 저장
+            post = form.save(commit= False) #유저정보 안넘어왔으므로 따로 저장해줘야함
+            post.author = request.user 
+            #현재 로그인 유저 인스턴스 --> 로그인 상황임을 보장 받아야 함 , @login_required 장식자로 감싸야 함
+            # DB에 저장
+            post.save()
+
+            # 3. success url 이동
+            # redirect 
+            return redirect(post)
         
     else: #request.method == "GET"일경우 
         # 빈 폼 반환
         form = PostForm()
-    # print(form)
     
     return render(request, 'instagram/post_form.html', {
         'form' : form,
@@ -241,3 +241,43 @@ def ai_list(request):
         'ai_list' : qs,
         'q' : q,
     })
+
+
+# edit view
+@login_required
+def post_edit(request, pk):
+    # 일단 pk에 해당하는 모델에 대한 정보를 얻어온다
+    post = get_object_or_404(Post, pk= pk) #모델 인스턴스 넘어온다
+
+    # 작성자가 아닌 다른 사람이 게시물에 접근할 경우
+    if post.author != request.user:
+        # 메세지 보여줌
+        messages.error(request, '작성자만 수정할 수 있습니다')
+        return redirect(post)
+    
+    if request.method =="POST":
+        
+        form = PostForm(request.POST, request.FILES, instance=post)
+        
+        # reqeust로 넘어오는 것들 확인
+        print("request.POST, request.FILES, request.method, request.user", request.POST, request.FILES, request.method, request.user)
+        print("------------------------------------------")
+        # print("request.data", request.data)
+        if form.is_valid(): #유효성 검사 로직 수행
+            
+            # 유호성 검사 통과한 데이터들 DB저장
+            post = form.save()
+
+            # redirect 
+            # post에 해당하는 모델에 구현된 get_abolute_url로 리다이렉트 됨
+            return redirect(post)
+        
+    else: #request.method == "GET"일경우 
+        # 빈 폼 반환
+        form = PostForm(instance=post)
+    # print(form)
+    
+    return render(request, 'instagram/post_form.html', {
+        'form' : form,
+    })
+    pass

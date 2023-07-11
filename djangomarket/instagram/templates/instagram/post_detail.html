@@ -1,3 +1,9 @@
+{% extends "instagram/layout.html" %}
+{% block title%}
+    Post detail
+{% endblock title%}
+
+{% block content %}
 <h2>
     Author : {{post.author}}
 </h2>
@@ -7,4 +13,15 @@
 <div>
     {{post.message}}
 </div>
+</hr>
+
+{% comment %} url reverse {% endcomment %}
+<a href="{% url 'instagram:post_list' %}" class ="btn btn-primary">
+    목록
+</a>
+<a href="{% url 'instagram:post_edit' post.pk %}" class ="btn btn-info">
+    수정
+</a>
+
+{% endblock content %}
 

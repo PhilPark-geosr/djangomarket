@@ -31,18 +31,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 def ai_new(request):
 
     if request.method =="POST":
-        '''
-        author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-        # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
-        # 디비에는 파일이 저장된 경로가 들어감
-        photo = models.ImageField(blank= True, upload_to='instagram/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
-        created_at= models.DateTimeField(auto_now_add =True)
-        updated_at = models.DateTimeField(auto_now =True)
-        result_url = models.TextField()
-        '''
-         #외부 url 요청 처리하는 로직
-        # user모델 받아온다
         
+        
+        # 폼 생성
         form = AIForm(request.POST, request.FILES)
 
         # print(form)
@@ -86,7 +77,7 @@ def ai_new(request):
 
 def aidetail_new(request):
     if request.method =="POST":
-         #외부 url 요청 처리하는 로직
+         
         form = AIDetailForm(request.POST, request.FILES)
 
         # print(form)
@@ -97,6 +88,8 @@ def aidetail_new(request):
             current_user = User.objects.filter(pk=request.POST['user'])
             # print('user', current_user)
 
+
+            # 1. 외부 url 요청(AI 서버로)
             files = request.FILES['photo']
             upload = {'image': files}
 
@@ -106,33 +99,29 @@ def aidetail_new(request):
             # print(res.json())
             # 모델 인스턴스 생성
             # print(request.POST)
-            # temp = AI(user = current_user.first() , photo = request.FILES['photo'], result_url = res.json()['result_image_url'] )
-            
-            # form save
-            form = form.save(commit=False) #commit False로 해야 추가적인 정보를 저장할 수 있음
+             
+            # 2. form save
+            '''
+            form.save() 하면 내부적으로 model instance를 반환해줌
+            form.save()에는 내부적으로 유효성 검사 통과한 clean_data가 넘어감
+            ''' 
+            aidetail = form.save(commit=False) #commit False로 해야 추가적인 정보를 저장할 수 있음
+            print("aidetail", aidetail)
+            # 3. 데이터 추가
+            '''
+            API 요청해서 받은 결과를 모델인스턴스에 추가함
+            '''
+            aidetail.result = res.json()
+            aidetail.save() #이래야 최종적으로 DB에 저장됨
 
-            # add data
-            form.result = res.json()
-            form.save()
-
-
-            # temp = AIDetail(user = current_user.first() , photo = request.FILES['photo'],  result = res.json())
-            # print(temp)
-            # 모델결과 저장
-            # temp.save()
-
-            # print("form type", type(form))
-            
-            
-            # TODO: 요청결과 테이블로 볼 수 있도록 생성
-            # return redirect('/instagram/ai/inference/')
-
-            # url reverse
-            # return redirect(temp)
-            return redirect('/')
+            # 4. go success url 
+            return redirect(aidetail) # url reverse
+            # return redirect('http://127.0.0.1:8000/ai/inference/detail/')
     else: #request.method == "GET"일경우 
         # 빈 폼 반환
         form = AIDetailForm()
+
+        # form = AIDetailForm(task_category=my_task_category)
     # print(form)
     
     return render(request, 'ai/aidetail_form.html', {

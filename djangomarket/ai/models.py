@@ -29,7 +29,11 @@ class AI(models.Model):
     updated_at = models.DateTimeField(auto_now =True)
     # result_url = models.TextField()
     result = models.JSONField()
+
     # URL reverse
+    '''
+    redirect(모델) 시 호출되는 주소
+    '''
     def get_absolute_url(self):
         return reverse("ai:ai_list")
 
@@ -49,7 +53,7 @@ class AIDetail(models.Model):
     task_category = models.ForeignKey('ai.Task', on_delete=models.CASCADE)
 
     # 어떤 모델을 사용할 것인지
-    model_name = models.ForeignKey('ai.InferenceModel', on_delete=models.CASCADE)
+    # model_name = models.ForeignKey('ai.InferenceModel', on_delete=models.CASCADE)
 
     # 디비에는 파일이 저장된 경로가 들어감
     photo = models.ImageField(blank= True, upload_to='ai/detail//%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
@@ -81,6 +85,7 @@ class InferenceModel(models.Model):
     # task = models.ForeignKey('ai.Task', on_delete=models.CASCADE)
 
     # 모델 명
+    task = models.ForeignKey('ai.Task', on_delete=models.CASCADE )
     name = models.TextField()
     def __str__(self):
         # return f"Custom Post object create_at {self.created_at}"
