@@ -1,0 +1,35 @@
+{% extends "accounts/layout.html"%}
+
+{% block title %}
+{{ user}} Profile
+{% endblock title %}
+
+{% block content %}
+{% comment %} user 
+- 로그인 : User모델 인스턴스
+- 로그아웃 : AnonymousUser(파이썬 클래스) 인스턴스 {% endcomment %}
+<h2>User : {{user}} </h2>
+{% if user.profile %}
+<ul>
+    <li>
+        {{user.profile.address}}
+        
+    </li>
+    <li>
+        {{user.profile.zipcode}}
+        
+    </li>
+    
+</ul>
+
+{% endif %}
+
+
+{% comment %} 인증되었는지 여부 {% endcomment %}
+<div>
+    user.is_authenticated : {{user.is_authenticated}} 
+    
+</div>
+
+<a href = "{% url "profile_edit" %}" class = "btn btn-primary">프로필 수정</a>
+{% endblock content%}
