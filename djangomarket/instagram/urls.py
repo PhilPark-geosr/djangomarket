@@ -9,11 +9,11 @@ urlpatterns = [
     # URL reverse : name인자에 url리버스를 수행할 이름을 넘겨주면된다!
 
     # create view
-    path('ai/inference/new/', views.ai_new, name = "ai_new"),
+    # path('ai/inference/new/', views.ai_new, name = "ai_new"),
     path('new/', views.post_new, name = "post_new"),
     
     # list view
-    path('ai/inference/', views.ai_list, name = "ai_list"),
+    # path('ai/inference/', views.ai_list, name = "ai_list"),
     path('', views.post_list, name = "post_list"),
 
     # detail view

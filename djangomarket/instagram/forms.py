@@ -1,5 +1,6 @@
 from django import forms
-from .models import Post, AI
+from .models import Post
+# from .models import AI
 # 정규표현식
 import re
 
@@ -29,8 +30,8 @@ class PostForm(forms.ModelForm):
             message = re.sub(r'[a-zA-Z]+', '', message) #영어가 있으면 없애버린다
         return message
 
-class AIForm(forms.ModelForm):
-    class Meta:
-        model = AI
-        fields = ['user','photo']
+# class AIForm(forms.ModelForm):
+#     class Meta:
+#         model = AI
+#         fields = ['user','photo']
         

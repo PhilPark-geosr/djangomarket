@@ -45,7 +45,7 @@ class Post(models.Model):
 '''
 
 @admin.register(Comment)
-class PostAdmin(admin.ModelAdmin):
+class CommentAdmin(admin.ModelAdmin):
     # admin 페이지에서 표출할 필드 지정
     # list_display에 들어갈수 있는 항목 : Post모델의 필드 이름 or 사용자 정의 함수들..
     list_display =['id', 'post', 'message']

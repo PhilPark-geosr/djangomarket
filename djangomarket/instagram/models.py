@@ -12,24 +12,24 @@ from django.core.validators import MinLengthValidator
 
 # Create your models here.
 # for AI
-class AI(models.Model):
-    # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
-    # 누가 추론했는지
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # 디비에는 파일이 저장된 경로가 들어감
-    # TODO: 사진 저장 경로바꿀것
-    photo = models.ImageField(blank= True, upload_to='ai/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
-    created_at= models.DateTimeField(auto_now_add =True)
-    updated_at = models.DateTimeField(auto_now =True)
-    result_url = models.TextField()
+# class AI(models.Model):
+#     # upload to : settings.MEDIA_URL/instagram/post/%Y/%m/%d/ 폴더에 쌓임
+#     # 누가 추론했는지
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     # 디비에는 파일이 저장된 경로가 들어감
+#     # TODO: 사진 저장 경로바꿀것
+#     photo = models.ImageField(blank= True, upload_to='ai/post/%Y/%m/%d') ## pillow 라이브러리가 설치되어야 있어야 함!
+#     created_at= models.DateTimeField(auto_now_add =True)
+#     updated_at = models.DateTimeField(auto_now =True)
+#     result_url = models.TextField()
     
-    # URL reverse
-    def get_absolute_url(self):
-        return reverse("instagram:ai_list")
+#     # URL reverse
+#     def get_absolute_url(self):
+#         return reverse("instagram:ai_list")
 
-    # qs 정렬 조건
-    class Meta:
-        ordering = ['-id']
+#     # qs 정렬 조건
+#     class Meta:
+#         ordering = ['-id']
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.TextField(validators=[MinLengthValidator(10)]) #최소 10글자 유효성 검사 로직
