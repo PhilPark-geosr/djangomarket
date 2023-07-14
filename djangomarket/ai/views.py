@@ -32,7 +32,6 @@ def ai_new(request):
 
     if request.method =="POST":
         
-        
         # 폼 생성
         form = AIForm(request.POST, request.FILES)
 
@@ -128,9 +127,41 @@ def aidetail_new(request):
         'form' : form,
     })
 
+# 기존 코드
+# def ai_list(request):
+#     # print(request.GET)
+    
+#     q = request.GET.get('q', '')
+#     if q:
+#         User = get_user_model()
 
+#         # 쿼리스트링으로 넘어온 유저로 검색
+#         current_user = get_object_or_404(User, username=q)
+#         # current_user = User.objects.filter(username=q).first()
+        
+#         # 유저에 해당되는 모든 ai 결과들 쿼리
+#         qs = current_user.ai_ai_set.all()
+#         print(qs)
+#     # instagram/templates/instagram/post_list.html
+#     else:
+#         # 쿼리스트링으로 아무것도 안들어올 시 그냥 모두 검색
+#         qs = AI.objects.all()
+        
+#     return render(request, 'ai/ai_list.html', {
+#         'ai_list' : qs,
+#         'q' : q,
+#     })
+# 개선코드
+@login_required #로그인 필수
 def ai_list(request):
+    # GET 인자로 넘어온 것 확인
     # print(request.GET)
+    
+    # 로그인된 유저 확인
+    # print('로그인된 유저', request.user )
+
+    # 검색 기능 구현
+    # 사용모델로 검색
     q = request.GET.get('q', '')
     if q:
         User = get_user_model()
@@ -144,8 +175,8 @@ def ai_list(request):
         print(qs)
     # instagram/templates/instagram/post_list.html
     else:
-        # 쿼리스트링으로 아무것도 안들어올 시 그냥 모두 검색
-        qs = AI.objects.all()
+        # 쿼리스트링으로 아무것도 안들어올 시 유저이름으로 그냥 모두 검색
+        qs = AI.objects.filter(user = request.user)
         
     return render(request, 'ai/ai_list.html', {
         'ai_list' : qs,
