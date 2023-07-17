@@ -103,12 +103,12 @@ WSGI_APPLICATION = 'djangomarket.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # for mongo db
 # DATABASES = {
@@ -123,14 +123,14 @@ WSGI_APPLICATION = 'djangomarket.wsgi.application'
 
 
 # for mongo local
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'django_test2',
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'django_test2',
+#         'HOST': '127.0.0.1',
+#         'PORT': 27017,
+#     }
+# }
 # for mongo Atlas
 # DATABASES = {
 #     'default': {
@@ -203,7 +203,8 @@ AUTH_USER_MODEL = "auth.User"
 
 # erd 추출용
 GRAPH_MODELS = {
-  'all_applications': True,
+#   'all_applications': True,
+  'app_labels': ["ai", "auth", "drf"],
   'group_models': True,
 }
 
