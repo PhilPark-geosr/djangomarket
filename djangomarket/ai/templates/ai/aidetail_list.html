@@ -43,8 +43,16 @@
                 <td>
                     {{elem.task_category.name}}
                 </td>
-                <td>
+                {% comment %} <td>
                     {{elem.model_name.name}}
+                </td> {% endcomment %}
+                <td>
+                    {% for t in elem.task_category.inferencemodel_set.all %}
+                    {% comment %} TODO: 유저가 입력한 모델만 보여지게끔 {% endcomment %}
+                        {{t.name}}, {{user}}
+                    {% endfor %}
+                    
+                    
                 </td>
                 <td>
                     <img src = {{elem.result.result_image_url}} style = "width:200px"/>

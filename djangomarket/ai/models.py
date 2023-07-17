@@ -50,7 +50,7 @@ class AIDetail(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ai_aidetail_set")
     
     # 어떤 카테고리 작업을 할건지.. 1개 카테고리에 N개 Post이 존재할 수 있으므로..
-    task_category = models.ForeignKey('ai.Task', on_delete=models.CASCADE)
+    task_category = models.ForeignKey('ai.Task', on_delete=models.CASCADE, related_name="ai_aidetail_set")
 
     # 어떤 모델을 사용할 것인지
     # model_name = models.ForeignKey('ai.InferenceModel', on_delete=models.CASCADE)

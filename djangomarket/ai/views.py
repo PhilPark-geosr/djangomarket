@@ -2,7 +2,7 @@
 from django.http	import HttpRequest,	HttpResponse, Http404
 
 # Models
-from .models import  AI, AIDetail
+from .models import  AI, AIDetail, Task
 from django.contrib.auth import get_user_model
 
 # Forms
@@ -182,7 +182,7 @@ def ai_list(request):
         'ai_list' : qs,
         'q' : q,
     })
-
+@login_required
 def aidetail_list(request):
     # print(request.GET)
     q = request.GET.get('q', '')
@@ -205,3 +205,31 @@ def aidetail_list(request):
         'aidetail_list' : qs,
         'q' : q,
     })
+
+
+# @login_required
+# def aidetail_list(request):
+#     # print(request.GET)
+
+#     # 추론한 모델 태스크로 검색
+#     q = request.GET.get('q', '')
+#     if q:
+#         #TODO: 문자열 포함결과로 검색 구현
+#         # task = Task.objects.filter(name__icontains = 'In')
+
+#         # 쿼리스트링으로 넘어온 태스크 카테고리로 검색 
+#         task = get_object_or_404(Task, name=q)
+        
+#         # 태스크에 해당되는 모든 ai 결과들 쿼리
+#         qs = task.ai_aidetail_set.all()
+#         # print(qs)
+    
+#     # instagram/templates/instagram/post_list.html
+#     else:
+#         # 쿼리스트링으로 아무것도 안들어올 시 유저가 요청한 추론 내역이 다 보임
+#         qs = AIDetail.objects.filter(user = request.user)
+        
+#     return render(request, 'ai/aidetail_list.html', {
+#         'aidetail_list' : qs,
+#         'q' : q,
+#     })
