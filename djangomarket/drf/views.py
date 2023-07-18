@@ -66,7 +66,6 @@ class AIDetailViewSet(ModelViewSet):
     queryset = AIDetail.objects.all()
     serializer_class = AIDetailSerializer
 
-
     # def list(self, request):
     #     pass
     # def create(self, request):
