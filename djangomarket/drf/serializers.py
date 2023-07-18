@@ -1,7 +1,7 @@
 ## 데이터 직렬화 관련 
 # from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import Post
+from .models import Post, AIDetail, Task, InferenceModel
 
 # 내장 유저모델 임포트할때 반드시 이렇게!
 from django.contrib.auth import get_user_model
@@ -63,3 +63,20 @@ class PostSerializer(serializers.ModelSerializer):
 #             'author', 
 
 #         ] #원하는 필드 리스트만 직렬화 해서 보여줌
+
+#---------------------------------- for AI -------------------------------------------#
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email']
+
+
+#TODO: pk나오도록 조치
+
+class AIDetailSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source = 'user.username')
+    
+    class Meta:
+        model = AIDetail
+        read_only_fields = ('result','username')
+        fields = ['pk','photo', 'username','result']

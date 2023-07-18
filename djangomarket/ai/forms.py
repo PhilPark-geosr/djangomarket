@@ -1,5 +1,5 @@
 from django import forms
-from .models import AI, AIDetail, InferenceModel
+from .models import AI, AIDetail, InferenceModel, Task
 
 # model명과 form 명을
 # naming rule : {model명} + Form
@@ -33,9 +33,19 @@ class AIDetailForm(forms.ModelForm):
         label='Inference Model Name'
     )
 
+    # test
+    # task = forms.ModelChoiceField(
+    #     queryset=Task.objects.all(),
+    #     label='task'
+    # )
+
     class Meta:
         model = AIDetail
-        fields = ['user', 'photo', 'task_category', 'inference_model_name']
+        fields = ['photo', 'task_category', 'inference_model_name']
+        # fields = ['user', 'photo', 'task_category', 'task']
+
+
+
 
 # class AIDetailForm(forms.ModelForm):
 #     def __init__(self, *args, **kwargs):

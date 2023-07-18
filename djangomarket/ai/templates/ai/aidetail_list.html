@@ -49,7 +49,7 @@
                 <td>
                     {% for t in elem.task_category.inferencemodel_set.all %}
                     {% comment %} TODO: 유저가 입력한 모델만 보여지게끔 {% endcomment %}
-                        {{t.name}}, {{user}}
+                        {{t.name}}
                     {% endfor %}
                     
                     
