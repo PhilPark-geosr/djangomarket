@@ -35,7 +35,9 @@ class AI(models.Model):
     redirect(모델) 시 호출되는 주소
     '''
     def get_absolute_url(self):
-        return reverse("ai:ai_list")
+        return reverse("ai:aidetail_detail", args= [self.pk])
+    # def get_absolute_url(self):
+    #     return reverse("ai:ai_list")
 
     # qs 정렬 조건
     class Meta:
@@ -63,9 +65,10 @@ class AIDetail(models.Model):
     # 추론결과 넘어오는 필드
     result = models.JSONField()
     # URL reverse
+    # def get_absolute_url(self):
+    #     return reverse("ai:aidetail_list")
     def get_absolute_url(self):
-        return reverse("ai:aidetail_list")
-
+        return reverse("ai:aidetail_detail", args= [self.pk])
     # qs 정렬 조건
     class Meta:
         ordering = ['-id']

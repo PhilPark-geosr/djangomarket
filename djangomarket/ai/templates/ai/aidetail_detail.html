@@ -1,0 +1,41 @@
+{% extends "ai/layout.html" %}
+{% block title%}
+    AI detail
+{% endblock title%}
+
+{% block content %}
+<h2>
+    추론자 : {{aidetail.user}}
+</h2>
+{% if aidetail.photo %}
+    <img src = "{{aidetail.photo.url}}" style = "width: 400px;" />
+{% endif %}
+
+
+<img src = "{{aidetail.result.result_image_url}}" style = "width: 400px;" />
+</br>
+{% comment %} 
+{% for elem in aidetail.result %}
+    {{elem}}
+{% endfor %}  {% endcomment %}
+
+<div>
+    image labels
+</div>
+
+<div>
+    {{aidetail.result.labels}}
+</div>    
+
+
+
+{% comment %} url reverse {% endcomment %}
+<a href="{% url 'ai:aidetail_list' %}" class ="btn btn-primary">
+    목록
+</a>
+{% comment %} <a href="{% url 'ai:aidetail_edit' post.pk %}" class ="btn btn-info">
+    수정
+</a> {% endcomment %}
+
+{% endblock content %}
+

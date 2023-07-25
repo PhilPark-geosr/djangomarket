@@ -29,9 +29,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def ai_new(request):
-
     if request.method =="POST":
-        
         # 폼 생성
         form = AIForm(request.POST, request.FILES)
 
@@ -151,6 +149,8 @@ def aidetail_new(request):
 #         'ai_list' : qs,
 #         'q' : q,
 #     })
+
+
 # 개선코드
 @login_required #로그인 필수
 def ai_list(request):
@@ -182,6 +182,7 @@ def ai_list(request):
         'ai_list' : qs,
         'q' : q,
     })
+
 @login_required
 def aidetail_list(request):
     # print(request.GET)
@@ -233,3 +234,19 @@ def aidetail_list(request):
 #         'aidetail_list' : qs,
 #         'q' : q,
 #     })
+
+# --------------------------Detail View ---------------------------#
+
+# @login_required
+class AIDetailDetailView(DetailView):
+    model = AIDetail
+    # queryset = Post.objects.filter(is_pubic = True)
+    
+    # DetailView를 상속받아 재정의
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+    #     if not self.request.user.is_authenticated:  # 현재 로그인 한 유저의 인스턴스
+    #         qs = qs.filter(is_public = True) # 로그인 안한 유저들은 is_public = True만 볼 수 있도록
+    #     return qs
+
+aidetail_detail = AIDetailDetailView.as_view()

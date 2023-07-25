@@ -29,6 +29,6 @@ urlpatterns = [
     path('', include(router.urls)),
     # path('ai/', views.aidetail_list)
     path('ai/', memo_list),
-    path('ai/<int:pk>', memo_detail)
-    
+    path('ai/<int:pk>', memo_detail),
+    path('aitest/', views.AIDetailViewSet2.as_view()),
 ]

@@ -10,4 +10,6 @@ urlpatterns = [
     path('inference/detail/new/', views.aidetail_new, name = "aidetail_new"),
     path('inference/detail/', views.aidetail_list, name = "aidetail_list"),
     
+    # detail view
+    path('inference/detail/<int:pk>/', views.aidetail_detail, name = "aidetail_detail"),
 ]

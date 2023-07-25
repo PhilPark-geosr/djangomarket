@@ -11,6 +11,11 @@ from rest_framework.response import Response
 # DRF - Decorator
 from rest_framework.decorators import api_view, action
 
+# parser : swagger에서 image upload 인식을 위함
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser,FileUploadParser
+
+# wwagger api관련
+from drf_yasg.utils import swagger_auto_schema
 # import Model
 from .models import Post, AIDetail
 
@@ -24,7 +29,6 @@ import requests
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
 
     # CBV에서 실제 요청이 올때마다 항상 소출되는 함수
     def dispatch(self, request, *args, **kwargs):
@@ -65,12 +69,13 @@ def public_post_list(request):
 class AIDetailViewSet(ModelViewSet):
     queryset = AIDetail.objects.all()
     serializer_class = AIDetailSerializer
-
+    parser_classes = (MultiPartParser,) ## swagger api에서 이미지 업로드 인식
     # def list(self, request):
     #     pass
     # def create(self, request):
     #     pass
-    #TODO: action 추가로직 구현
+    # action 추가로직 구현
+    @swagger_auto_schema(operation_description='Upload file...',)
     @action(detail=False, methods=['post'])
     def set_content(self, request):
         serializer = AIDetailSerializer(data=request.data)
@@ -98,29 +103,31 @@ class AIDetailViewSet(ModelViewSet):
         print(f"request.POST : {request.POST}")
         return super().dispatch(request, *args, **kwargs)
 
-# class AIDetailViewSet(APIView):
-#     renderer_classes = [TemplateHTMLRenderer]
-#     template_name = 'aidetail_form.html'
-#     def get(self, request, format=None):
-#         qs = AIDetail.objects.all()
-#         serializer = AIDetailSerializer(qs, many =True)
-#         return Response(serializer.data) #이렇게 해야 HTTPresponse로 감싸져서 나온다
+class AIDetailViewSet2(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'aidetail_form.html'
+    parser_classes = (MultiPartParser,FormParser, FileUploadParser)# image upload
+    
+    def get(self, request, format=None):
+        qs = AIDetail.objects.all()
+        serializer = AIDetailSerializer(qs, many =True)
+        return Response(serializer.data) #이렇게 해야 HTTPresponse로 감싸져서 나온다
         
-#     def post(self, request):
-#         serializer = AIDetailSerializer(data=[request.POST, request.FILES])
-#         if serializer.is_valid():
-#             # 추론서버에 요청
-#             # 1. 외부 url 요청(AI 서버로)
-#             files = request.FILES['photo']
-#             upload = {'image': files}
+    def post(self, request):
+        serializer = AIDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            # 추론서버에 요청
+            # 1. 외부 url 요청(AI 서버로)
+            files = request.FILES['photo']
+            upload = {'image': files}
+            
+            url = 'http://192.168.1.141:8000/inference/'
+            res = requests.post(url, files = upload) # 요청한 결과 res에 받음
 
-#             url = 'http://192.168.1.141:8000/inference/'
-#             res = requests.post(url, files = upload) # 요청한 결과 res에 받음
-
-#             # 데이터 추가 저장
-#             serializer.save(user=request.user, result=res.json()) #추가로 넣어주고 싶은 데이터를 키워드 인자로 넣어준다!
-#         # return Response(serializer.data, status=201)
-#         return redirect('profile-list')
+            # 데이터 추가 저장
+            serializer.save(user=request.user, result=res.json()) #추가로 넣어주고 싶은 데이터를 키워드 인자로 넣어준다!
+        return Response(serializer.data, status=201)
+        # return redirect('profile-list')
         
 # 함수로 따로 정의
 # aidetail_list = AIDetailViewSet.as_view()
