@@ -26,6 +26,7 @@ class PostSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'is_public',
+            'ip', # ReadOnly로 걸고 싶으면.. Model 클래스의 ip field에 editable = False 지정!
 
             # 원래 모델에는 없는 필드이나 모델의 필드를 가공하여(1:N for N:M 관계 활용), 
             # serializers.ReadOnlyField에 추가하여 보여질 수 있게 함

@@ -7,13 +7,13 @@ from rest_framework.routers import DefaultRouter
 # viewset 추가할 ㅣ경우 
 router = DefaultRouter()
 router.register('post', views.PostViewSet) # 2개 URL패턴 만들어줌
-# router.register('ai', views.AIDetailViewSet)
+router.register('ai', views.AIDetailViewSet)
 
 # ModelViewset 적용
-memo_list = views.AIDetailViewSet.as_view(
-    {"get": "list", "post": "set_content"})
-memo_detail = views.AIDetailViewSet.as_view(
-    {"get": "retrieve", "patch": "partial_update", "delete": "destroy"})
+# memo_list = views.AIDetailViewSet.as_view(
+#     {"get": "list", "post": "set_content"})
+# memo_detail = views.AIDetailViewSet.as_view(
+#     {"get": "retrieve", "patch": "partial_update", "delete": "destroy"})
 
 # print("router.urls", router.urls) ## URL pattern list
 '''
@@ -28,7 +28,7 @@ urlpatterns = [
     path('public/', views.public_post_list),
     path('', include(router.urls)),
     # path('ai/', views.aidetail_list)
-    path('ai/', memo_list),
-    path('ai/<int:pk>', memo_detail),
+    # path('ai/', memo_list),
+    # path('ai/<int:pk>', memo_detail),
     path('aitest/', views.AIDetailViewSet2.as_view()),
 ]

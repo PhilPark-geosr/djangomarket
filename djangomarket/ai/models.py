@@ -63,10 +63,9 @@ class AIDetail(models.Model):
     updated_at = models.DateTimeField(auto_now =True)
     
     # 추론결과 넘어오는 필드
-    result = models.JSONField()
+    result = models.JSONField() ##TODO: 결과들 분리
+    
     # URL reverse
-    # def get_absolute_url(self):
-    #     return reverse("ai:aidetail_list")
     def get_absolute_url(self):
         return reverse("ai:aidetail_detail", args= [self.pk])
     # qs 정렬 조건

@@ -81,8 +81,8 @@ def aidetail_new(request):
         # # print(request.data)
         if form.is_valid(): #유효성 검사 로직 수행
             # user모델 받아온다
-            User = get_user_model()
-            current_user = User.objects.filter(pk=request.POST['user'])
+            # User = get_user_model()
+            # current_user = User.objects.filter(pk=request.POST['user'])
             # print('user', current_user)
 
 
@@ -103,12 +103,13 @@ def aidetail_new(request):
             form.save()에는 내부적으로 유효성 검사 통과한 clean_data가 넘어감
             ''' 
             aidetail = form.save(commit=False) #commit False로 해야 추가적인 정보를 저장할 수 있음
-            print("aidetail", aidetail)
+            # print("aidetail", aidetail)
             # 3. 데이터 추가
             '''
             API 요청해서 받은 결과를 모델인스턴스에 추가함
             '''
             aidetail.result = res.json()
+            aidetail.user = request.user # 유저정보 입력
             aidetail.save() #이래야 최종적으로 DB에 저장됨
 
             # 4. go success url 
