@@ -29,14 +29,22 @@ import requests
 
 # authentication and permissions
 from rest_framework.permissions import IsAuthenticated
-
 from .permissions import IsAuthorOrReadonly
+
+# filtering & Ordering
+from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    
+    # permission
     permission_classes = [IsAuthenticated, IsAuthorOrReadonly] #접근을 위해서는 로그인이 무조건 되어야 함을 지정해줌
-    # 
+    
+    # filtering & Ordering
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['message'] #DB where 조건절 지정
+
     def perform_create(self, serializer):
         #FIXME: 인증이 되어있다는 가정하에 author를 지정 --> authentication_classes 지정!
         ip = self.request.META['REMOTE_ADDR']
