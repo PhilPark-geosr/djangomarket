@@ -3,6 +3,7 @@ from django.http	import HttpRequest,	HttpResponse, Http404
 
 # Models
 from .models import  AI, AIDetail, Task
+from django.db import models
 from django.contrib.auth import get_user_model
 
 # Forms
@@ -187,7 +188,17 @@ def ai_list(request):
 @login_required
 def aidetail_list(request):
     # print(request.GET)
-    q = request.GET.get('q', '')
+
+    q = request.GET.get('q')
+    
+    #FIXME: 다른 필드 넣어서 확인
+    # if q:
+    #     qs = AIDetail.objects.all()
+    #     qs = qs.filter(
+    #         models.Q(task_category__icontains=q) |
+    #         models.Q(user__icontains=q)
+    #     )
+
     if q:
         User = get_user_model()
 
@@ -197,7 +208,7 @@ def aidetail_list(request):
         
         # 유저에 해당되는 모든 ai 결과들 쿼리
         qs = current_user.ai_aidetail_set.all()
-        print(qs)
+        # print(qs)
     # instagram/templates/instagram/post_list.html
     else:
         # 쿼리스트링으로 아무것도 안들어올 시 그냥 모두 검색
