@@ -4,6 +4,7 @@ from django.http	import HttpRequest,	HttpResponse, Http404
 # Models
 from .models import Post
 from django.contrib.auth import get_user_model
+from django.db import models
 # from .models import AI
 # Forms
 from .forms import PostForm
@@ -150,6 +151,21 @@ name : 어떤 멤버함수에 첫번째 인자로 지정한 decorator를 입히�
 class PostListView(LoginRequiredMixin, ListView):
     model= Post
     paginate_by = 10
+    
+
+    # FIXME: mongodb에서 잘 안됨
+    def get_queryset(self):
+        search_query = self.request.GET.get('q')
+        queryset = super().get_queryset()
+
+        if search_query:
+            queryset = queryset.filter(
+                models.Q(author__username__icontains=search_query) |
+                models.Q(message__icontains=search_query) |
+                models.Q(tag_set__name__icontains=search_query)
+            ).distinct()
+
+        return queryset
 
 post_list = PostListView.as_view()
 

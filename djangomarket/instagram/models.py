@@ -33,6 +33,7 @@ from django.core.validators import MinLengthValidator
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.TextField(validators=[MinLengthValidator(10)]) #최소 10글자 유효성 검사 로직
+    #message = models.TextField(validators=[MinLengthValidator(10)]) #최소 10글자 유효성 검사 로직
     
     # tag set
     # many to many 에서는 blank = True로 두는게 편함

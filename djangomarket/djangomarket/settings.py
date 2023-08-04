@@ -216,5 +216,19 @@ CORS_ORIGIN_ALLOW_ALL = True
 #     'http://localhost:8081',
 # )
 
+# Rest FrameWork
+REST_FRAMEWORK = {
+    # 디폴트 인증 지정
+    'DEFAULT_PERMISSION_CLASSES': [
+
+    # 누구든지 접근 허용
+    #'rest_framework.permissions.AllowAny',
+    
+    # 인증된 사용자만 접근 허용
+    'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+
 # django-shell_plus 사용할때의 설정
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'

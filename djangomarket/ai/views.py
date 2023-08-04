@@ -3,6 +3,7 @@ from django.http	import HttpRequest,	HttpResponse, Http404
 
 # Models
 from .models import  AI, AIDetail, Task
+from django.db import models
 from django.contrib.auth import get_user_model
 
 # Forms
@@ -29,9 +30,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def ai_new(request):
-
     if request.method =="POST":
-        
         # 폼 생성
         form = AIForm(request.POST, request.FILES)
 
@@ -83,8 +82,8 @@ def aidetail_new(request):
         # # print(request.data)
         if form.is_valid(): #유효성 검사 로직 수행
             # user모델 받아온다
-            User = get_user_model()
-            current_user = User.objects.filter(pk=request.POST['user'])
+            # User = get_user_model()
+            # current_user = User.objects.filter(pk=request.POST['user'])
             # print('user', current_user)
 
 
@@ -105,12 +104,13 @@ def aidetail_new(request):
             form.save()에는 내부적으로 유효성 검사 통과한 clean_data가 넘어감
             ''' 
             aidetail = form.save(commit=False) #commit False로 해야 추가적인 정보를 저장할 수 있음
-            print("aidetail", aidetail)
+            # print("aidetail", aidetail)
             # 3. 데이터 추가
             '''
             API 요청해서 받은 결과를 모델인스턴스에 추가함
             '''
             aidetail.result = res.json()
+            aidetail.user = request.user # 유저정보 입력
             aidetail.save() #이래야 최종적으로 DB에 저장됨
 
             # 4. go success url 
@@ -151,6 +151,8 @@ def aidetail_new(request):
 #         'ai_list' : qs,
 #         'q' : q,
 #     })
+
+
 # 개선코드
 @login_required #로그인 필수
 def ai_list(request):
@@ -182,10 +184,21 @@ def ai_list(request):
         'ai_list' : qs,
         'q' : q,
     })
+
 @login_required
 def aidetail_list(request):
     # print(request.GET)
-    q = request.GET.get('q', '')
+
+    q = request.GET.get('q')
+    
+    #FIXME: 다른 필드 넣어서 확인
+    # if q:
+    #     qs = AIDetail.objects.all()
+    #     qs = qs.filter(
+    #         models.Q(task_category__icontains=q) |
+    #         models.Q(user__icontains=q)
+    #     )
+
     if q:
         User = get_user_model()
 
@@ -195,7 +208,7 @@ def aidetail_list(request):
         
         # 유저에 해당되는 모든 ai 결과들 쿼리
         qs = current_user.ai_aidetail_set.all()
-        print(qs)
+        # print(qs)
     # instagram/templates/instagram/post_list.html
     else:
         # 쿼리스트링으로 아무것도 안들어올 시 그냥 모두 검색
@@ -233,3 +246,19 @@ def aidetail_list(request):
 #         'aidetail_list' : qs,
 #         'q' : q,
 #     })
+
+# --------------------------Detail View ---------------------------#
+
+# @login_required
+class AIDetailDetailView(DetailView):
+    model = AIDetail
+    # queryset = Post.objects.filter(is_pubic = True)
+    
+    # DetailView를 상속받아 재정의
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+    #     if not self.request.user.is_authenticated:  # 현재 로그인 한 유저의 인스턴스
+    #         qs = qs.filter(is_public = True) # 로그인 안한 유저들은 is_public = True만 볼 수 있도록
+    #     return qs
+
+aidetail_detail = AIDetailDetailView.as_view()

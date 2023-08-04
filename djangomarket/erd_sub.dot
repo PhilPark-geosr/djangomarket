@@ -1,8 +1,8 @@
 router.urls [<URLPattern '^post/$' [name='post-list']>, <URLPattern '^post\.(?P<format>[a-z0-9]+)/?$' [name='post-list']>, <URLPattern '^post/(?P<pk>[^/.]+)/$' [name='post-detail']>, <URLPattern '^post/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$' [name='post-detail']>, <URLPattern '^$' [name='api-root']>, <URLPattern '^\.(?P<format>[a-z0-9]+)/?$' [name='api-root']>]
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  // Created: 2023-07-17 13:16
-  // Cli Options: -a
+  // Created: 2023-07-19 10:35
+  // Cli Options: ai
 
   fontname = "Roboto"
   fontsize = 8
@@ -1052,6 +1052,135 @@ digraph model_graph {
     
       </TABLE>
       >]
+<<<<<<< HEAD
+=======
+  
+    drf_models_AIDetail [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      AIDetail
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>AutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>task_category</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>user</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">created_at</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">photo</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">ImageField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">result</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">JSONField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">updated_at</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
+    drf_models_Task [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      Task
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>AutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">name</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">TextField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
+    drf_models_InferenceModel [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      InferenceModel
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>AutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>task</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">name</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">TextField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+>>>>>>> mongodb2
 
   }
 
@@ -1138,5 +1267,17 @@ digraph model_graph {
   drf_models_Post -> django_contrib_auth_models_User
   [label=" author (drf_post_set)"] [arrowhead=none, arrowtail=dot, dir=both];
 
+<<<<<<< HEAD
+=======
+  drf_models_AIDetail -> django_contrib_auth_models_User
+  [label=" user (drf_aidetail_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  drf_models_AIDetail -> drf_models_Task
+  [label=" task_category (drf_aidetail_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  drf_models_InferenceModel -> drf_models_Task
+  [label=" task (inferencemodel)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+>>>>>>> mongodb2
 
 }
