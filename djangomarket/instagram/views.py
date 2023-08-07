@@ -29,6 +29,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # message framework : 사용자에게 메세지 보여줄때 슴
 from django.contrib import messages
 
+# Caching
+from django.core.cache import cache
+
 # Create your views here.
 # def ai_new(request):
 
@@ -153,17 +156,49 @@ class PostListView(LoginRequiredMixin, ListView):
     paginate_by = 10
     
 
-    # FIXME: mongodb에서 잘 안됨
+    # FIXME: mongodb에서 잘 안됨, RDBMS에서는 잘됨
+    # def get_queryset(self):
+    #     search_query = self.request.GET.get('q')
+    #     queryset = super().get_queryset()
+
+    #     if search_query:
+    #         queryset = queryset.filter(
+    #             models.Q(author__username__icontains=search_query) |
+    #             models.Q(message__icontains=search_query) |
+    #             models.Q(tag_set__name__icontains=search_query)
+    #         ).distinct()
+
+    #     return queryset
+    # Redis caching
     def get_queryset(self):
         search_query = self.request.GET.get('q')
-        queryset = super().get_queryset()
 
         if search_query:
-            queryset = queryset.filter(
-                models.Q(author__username__icontains=search_query) |
-                models.Q(message__icontains=search_query) |
-                models.Q(tag_set__name__icontains=search_query)
-            ).distinct()
+            cache_key = f'post_search:{search_query}'
+            cached_queryset = cache.get(cache_key)
+
+            if cached_queryset is None:
+                queryset = super().get_queryset().filter(
+                    models.Q(author__username__icontains=search_query) |
+                    models.Q(message__icontains=search_query) |
+                    models.Q(tag_set__name__icontains=search_query)
+                ).distinct()
+
+                # 결과를 캐시에 저장
+                cache.set(cache_key, queryset)
+            else:
+                queryset = cached_queryset
+        else:
+            cache_key = 'post_list'
+            cached_queryset = cache.get(cache_key)
+
+            if cached_queryset is None:
+                queryset = super().get_queryset()
+
+                # 결과를 캐시에 저장
+                cache.set(cache_key, queryset)
+            else:
+                queryset = cached_queryset
 
         return queryset
 
