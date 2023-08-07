@@ -218,6 +218,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Rest FrameWork
 REST_FRAMEWORK = {
+    # paging 처리
+    'PAGE_SIZE': 5,
+    'DEFAULT_PAGINATION_CLASS':	'rest_framework.pagination.PageNumberPagination',
     # 디폴트 인증 지정
     'DEFAULT_PERMISSION_CLASSES': [
 
@@ -226,9 +229,28 @@ REST_FRAMEWORK = {
     
     # 인증된 사용자만 접근 허용
     'rest_framework.permissions.IsAuthenticated',
-    ]
-}
+    
+    # 호출횟수 지정
+    
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '2/day',
+    },
 
+}
+# CaChing
+CACHES = {  
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1", # 1번 DB
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
 # django-shell_plus 사용할때의 설정
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
