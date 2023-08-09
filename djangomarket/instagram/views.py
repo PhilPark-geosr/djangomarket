@@ -31,6 +31,8 @@ from django.contrib import messages
 
 # Caching
 from django.core.cache import cache
+from django.views.decorators.cache import cache_page
+# from django.utils.decorators import method_decorator
 
 # Create your views here.
 # def ai_new(request):
@@ -155,52 +157,58 @@ class PostListView(LoginRequiredMixin, ListView):
     model= Post
     paginate_by = 10
     
-
+    @method_decorator(cache_page(60, cache='default'))  # 60초 동안 캐시 유지
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
     # FIXME: mongodb에서 잘 안됨, RDBMS에서는 잘됨
-    # def get_queryset(self):
-    #     search_query = self.request.GET.get('q')
-    #     queryset = super().get_queryset()
-
-    #     if search_query:
-    #         queryset = queryset.filter(
-    #             models.Q(author__username__icontains=search_query) |
-    #             models.Q(message__icontains=search_query) |
-    #             models.Q(tag_set__name__icontains=search_query)
-    #         ).distinct()
-
-    #     return queryset
-    # Redis caching
     def get_queryset(self):
         search_query = self.request.GET.get('q')
+        queryset = super().get_queryset()
 
         if search_query:
-            cache_key = f'post_search:{search_query}'
-            cached_queryset = cache.get(cache_key)
-
-            if cached_queryset is None:
-                queryset = super().get_queryset().filter(
-                    models.Q(author__username__icontains=search_query) |
-                    models.Q(message__icontains=search_query) |
-                    models.Q(tag_set__name__icontains=search_query)
-                ).distinct()
-
-                # 결과를 캐시에 저장
-                cache.set(cache_key, queryset)
-            else:
-                queryset = cached_queryset
-        else:
-            cache_key = 'post_list'
-            cached_queryset = cache.get(cache_key)
-
-            if cached_queryset is None:
-                queryset = super().get_queryset()
-
-                # 결과를 캐시에 저장
-                cache.set(cache_key, queryset)
-            else:
-                queryset = cached_queryset
+            queryset = queryset.filter(
+                models.Q(author__username__icontains=search_query) |
+                models.Q(message__icontains=search_query) |
+                models.Q(tag_set__name__icontains=search_query)
+            ).distinct()
 
         return queryset
+    # Redis caching
+    # def get_queryset(self):
+    #     search_query = self.request.GET.get('q')
+
+    #     if search_query:
+    #         cache_key = f'post_search:{search_query}'
+    #         cached_queryset = cache.get(cache_key)
+            
+
+    #         if cached_queryset is None:
+    #             queryset = super().get_queryset().filter(
+    #                 models.Q(author__username__icontains=search_query) |
+    #                 models.Q(message__icontains=search_query) |
+    #                 models.Q(tag_set__name__icontains=search_query)
+    #             ).distinct()
+
+    #             # 결과를 캐시에 저장
+    #             cache.set(cache_key, queryset)
+    #         else:
+    #             queryset = cached_queryset
+    #     else:
+    #         cache_key = 'post_list'
+    #         cached_queryset = cache.get(cache_key)
+    #         # print("cached_queryset", cached_queryset    )
+
+    #         if cached_queryset is None:
+    #             queryset = super().get_queryset()
+    #             # posts = list(super().get_queryset())
+    #         # cache.set('post_list', posts)
+    #             # 결과를 캐시에 저장
+    #             cache.set(cache_key, queryset)
+    #         else:
+    #             queryset = cached_queryset
+
+    #     return queryset
 
 post_list = PostListView.as_view()
 

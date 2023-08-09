@@ -80,4 +80,4 @@ class AIDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = AIDetail
         read_only_fields = ('result','username')
-        fields = ['pk','photo', 'username','result']
+        fields = ['pk','photo', 'username','result', 'task_category']

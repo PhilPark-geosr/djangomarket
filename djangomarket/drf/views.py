@@ -33,7 +33,21 @@ from .permissions import IsAuthorOrReadonly
 
 # filtering & Ordering
 from rest_framework.filters import SearchFilter, OrderingFilter
+
+# caching 관련
+from django.core.cache import cache
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 # Create your views here.
+
+# 세션 캐싱
+def get_cached_session_data(session_key):
+    cached_data = cache.get(session_key)
+    if cached_data is None:
+        # cached_data = # 세션 데이터 조회 등의 작업
+        cache.set(session_key, cached_data, timeout=300)  # 5분 동안 캐시 유지
+    return cached_data
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -44,6 +58,13 @@ class PostViewSet(ModelViewSet):
     # filtering & Ordering
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['message'] #DB where 조건절 지정
+    
+
+    @method_decorator(cache_page(60))  # 60초 동안 캐시 유지
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+        
+    
 
     def perform_create(self, serializer):
         #FIXME: 인증이 되어있다는 가정하에 author를 지정 --> authentication_classes 지정!
@@ -95,7 +116,9 @@ class AIDetailViewSet(ModelViewSet):
     #     pass
     # def create(self, request):
     #     pass
-    
+    @method_decorator(cache_page(60, cache='default'))  # 60초 동안 캐시 유지
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
     # create 함수 재정의 실제 create함수 호출될때 perform_create함수 호출
     def perform_create(self, serializer):
         files = self.request.FILES['photo']
@@ -165,9 +188,9 @@ class AIDetailViewSet2(APIView):
             res = requests.post(url, files = upload) # 요청한 결과 res에 받음
 
             # 데이터 추가 저장
-            serializer.save(user=request.user, result=res.json()) #추가로 넣어주고 싶은 데이터를 키워드 인자로 넣어준다!
+            serializer.save(user=request.user, result=res.json()) 
+        # return redirect('profile-list')#추가로 넣어주고 싶은 데이터를 키워드 인자로 넣어준다!
         return Response(serializer.data, status=201)
-        # return redirect('profile-list')
         
 # 함수로 따로 정의
 # aidetail_list = AIDetailViewSet.as_view()

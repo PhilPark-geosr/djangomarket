@@ -237,7 +237,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'user': '2/day',
+        'user': '100/day',
     },
 
 }
@@ -248,8 +248,31 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/1", # 1번 DB
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
+        
     }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+SESSION_COOKIE_AGE = 600 #세션 캐싱 유지기간 설정 
+
+# 로깅 추가
+LOGGING = {
+"version": 1,
+"disable_existing_loggers": False,
+"handlers": {
+    "console": {
+        "level": "DEBUG",
+        "class": "logging.StreamHandler",
+    },
+},
+"loggers": {
+    "django.db.backends": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+},
 }
 
 # django-shell_plus 사용할때의 설정

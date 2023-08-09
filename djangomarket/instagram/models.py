@@ -9,7 +9,8 @@ from django.urls import reverse
 # validator
 from django.core.validators import MinLengthValidator
 
-
+# cache관련
+from django.core.cache import cache
 # Create your models here.
 # for AI
 # class AI(models.Model):
@@ -58,6 +59,17 @@ class Post(models.Model):
     ''' URL Reverse 구현 꼭 모델에 구현해 놓아야 함!!'''
     def get_absolute_url(self):
         return reverse("instagram:post_detail", args= [self.pk])
+    
+    # 캐싱 관련
+    def save(self, *args, **kwargs):
+        cache.delete('post_list')
+        # print("save함수 호출")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cache.delete('post_list')
+        # print("delete 함수 호출")
+        super().delete(*args, **kwargs)
     
     # qs 정렬 조건
     class Meta:
